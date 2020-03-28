@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from urllib.request import Request, urlopen
 import bs4 as bs
 import urllib.request
 
@@ -104,7 +105,9 @@ def home_page():
 @app.route('/home', methods=['GET'])
 def generalInfo():
 
-        sauce = urllib.request.urlopen('https://www.worldometers.info/coronavirus/')
+        url = "http://www.worldometers.info/coronavirus/"
+        req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        sauce = urllib.request.urlopen(req)
         soup = bs.BeautifulSoup(sauce, 'html.parser')
         
         total = soup.find_all('div', attrs={'class':'maincounter-number'})
@@ -176,19 +179,29 @@ def get_notifications():
 @app.route('/world', methods=['GET'])
 def worldInfo():
 
-    sauce = urllib.request.urlopen('https://www.worldometers.info/coronavirus/')
+    url = "http://www.worldometers.info/coronavirus/"
+    req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    sauce = urllib.request.urlopen(req)
     soup = bs.BeautifulSoup(sauce, 'html')
 
     table = soup.find('table', id="main_table_countries_today")
     table_rows = table.find_all('tr')
-
+    count = 0
     values = list()
     result = list()
-    keys = ["Country","Total Cases", "New Cases", "Total Deaths", "New Deaths", "Total Recovered", "Active Cases", "Critical", "Total Cases/1M Pop.", "Total Deaths/1M Pop."]
+    keys = ["country","totalCases", "newCases", "totalDeaths", "newDeaths", "totalRecovered", "activeCases", "critical", "totalCases1MPop.", "totalDeaths1MPop."]
     for tr in table_rows:
+        if count == 0:
+            count += 1
+            continue
         td = tr.find_all('td')
         values = [i.text.strip() for i in td]
         my_dict = dict(zip(keys, values))
+        my_dict['totalCases'] = int(my_dict['totalCases'].replace(',',''))
+        if my_dict['totalDeaths'] != "":
+            my_dict['totalDeaths'] = int(my_dict['totalDeaths'].replace(',',''))
+        if my_dict['totalRecovered'] != "":
+            my_dict['totalRecovered'] = int(my_dict['totalRecovered'].replace(',',''))
         result.append(my_dict)
 
     result.pop(0)    
