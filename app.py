@@ -197,11 +197,18 @@ def worldInfo():
         td = tr.find_all('td')
         values = [i.text.strip() for i in td]
         my_dict = dict(zip(keys, values))
-        my_dict['totalCases'] = int(my_dict['totalCases'].replace(',',''))
+        if my_dict["totalCases"] != "":
+            my_dict['totalCases'] = int(my_dict['totalCases'].replace(',',''))
+        else:
+            my_dict['totalCases'] = 0
         if my_dict['totalDeaths'] != "":
             my_dict['totalDeaths'] = int(my_dict['totalDeaths'].replace(',',''))
+        else: 
+            my_dict['totalDeaths'] = 0    
         if my_dict['totalRecovered'] != "":
             my_dict['totalRecovered'] = int(my_dict['totalRecovered'].replace(',',''))
+        else: 
+            my_dict['totalRecovered'] = 0    
         result.append(my_dict)
 
     result.pop(0)    
