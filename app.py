@@ -189,7 +189,7 @@ def worldInfo():
     count = 0
     values = list()
     result = list()
-    keys = ["country","totalCases", "newCases", "totalDeaths", "newDeaths", "totalRecovered", "activeCases", "critical", "totalCases1MPop.", "totalDeaths1MPop."]
+    keys = ["country","totalCases", "newCases", "totalDeaths", "newDeaths", "totalRecovered", "activeCases", "critical", "totalCases1MPop", "totalDeaths1MPop"]
     for tr in table_rows:
         if count == 0:
             count += 1
