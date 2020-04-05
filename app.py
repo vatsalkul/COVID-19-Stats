@@ -78,21 +78,23 @@ def indiaInfo():
         sauce = urllib.request.urlopen('https://www.mohfw.gov.in/')
         soup = bs.BeautifulSoup(sauce, 'html')
 
-        table = soup.find(class_='content newtab')
+        table = soup.find(class_='data-table table-responsive')
         table_rows = table.find_all('tr')
         # driver = webdriver.Chrome()
         # driver.get('https://www.mohfw.gov.in/')
         # driver.find_element_by_xpath('//*[@id="cases"]/button').click()
         values = list()
         result = list()
-        keys = ["id","State", "Confirmed(Indian)", "Confirmed(Foreigner)", "Cured/Migrated", "Death"]
+        keys = ["id","state", "confirm", "cured", "death"]
         for tr in table_rows:
             td = tr.find_all('td')
             values = [i.text for i in td]
             my_dict = dict(zip(keys, values))
             result.append(my_dict)
 
-        result.pop(0)    
+        result.pop(0)  
+        result.pop()
+        result.pop()  
         return jsonify(result)
 
 
